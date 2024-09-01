@@ -1,17 +1,15 @@
-import pandas as pd
-import numpy as np
-import setuptools.dist
 import string
+
+import numpy as np
+import pandas as pd
+from gensim.models import Word2Vec
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import warnings
-
-from gensim.models import Word2Vec
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense
 from tensorflow.keras.models import Sequential
-from sklearn.model_selection import train_test_split
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
 
 # Load the data
 data = pd.read_csv('NLP/movie_review.csv')
@@ -19,12 +17,15 @@ X_train, X_test, y_train, y_test = train_test_split(data['review'], data['sentim
 
 # Preprocess the text data
 stop_words = set(stopwords.words('english'))
+
+
 def preprocess(text):
     text = text.lower()
     text = ''.join([word for word in text if word not in string.punctuation])
     tokens = word_tokenize(text)
     tokens = [word for word in tokens if word not in stop_words]
     return ' '.join(tokens)
+
 
 X_train = X_train.apply(preprocess)
 X_test = X_test.apply(preprocess)
